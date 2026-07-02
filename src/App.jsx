@@ -125,7 +125,7 @@ const CAT_INTERIEUR = [
     nota: "Un ragréage du sol existant peut être nécessaire selon l'état du support, ce qui peut faire évoluer le devis final.",
     items: [
       { key: "solRetrait", label: "Retrait du sol existant", auto: "surface" },
-      { key: "solParquet", label: "Parquet flottant", auto: "surface", group: "revetement" },
+      { key: "solParquet", label: "Parquet flottant", auto: "surface", group: "revetement", pieces: ["chambre", "salon", "bureau", "entree"] },
       { key: "solSouple", label: "Sol souple / lino", auto: "surface", group: "revetement" },
       { key: "solVinyle", label: "Sol vinyle / PVC", auto: "surface", group: "revetement" },
       { key: "solCarrelage", label: "Carrelage", auto: "surface", group: "revetement" },
@@ -145,11 +145,11 @@ const CAT_INTERIEUR = [
     label: "🚿 Plomberie / chauffage",
     nota: "Climatisation, PAC et douche italienne sont des postes techniques : la fourchette affichée est volontairement plus large, un passage sur site reste nécessaire pour un chiffrage précis.",
     items: [
-      { key: "chauffeEauThermo", label: "Chauffe-eau thermodynamique" },
-      { key: "secheServiette", label: "Sèche-serviettes" },
-      { key: "climSplit", label: "Climatisation réversible (split)" },
-      { key: "douche", label: "Douche italienne" },
-      { key: "wcPose", label: "WC" },
+      { key: "chauffeEauThermo", label: "Chauffe-eau thermodynamique", pieces: ["cuisine", "sdb", "wc", "entree"] },
+      { key: "secheServiette", label: "Sèche-serviettes", pieces: ["sdb"] },
+      { key: "climSplit", label: "Climatisation réversible (split)", pieces: ["chambre", "salon", "bureau", "cuisine"] },
+      { key: "douche", label: "Douche italienne", pieces: ["sdb"] },
+      { key: "wcPose", label: "WC", pieces: ["wc", "sdb"] },
     ],
   },
   {
@@ -157,11 +157,11 @@ const CAT_INTERIEUR = [
     label: "🚪 Menuiserie intérieure / agencement",
     items: [
       { key: "porteInt", label: "Porte intérieure" },
-      { key: "porteplacard", label: "Portes de placard" },
-      { key: "dressing", label: "Dressing sur mesure" },
-      { key: "cuisineEntree", label: "Cuisine entrée de gamme", group: "cuisineNiveau" },
-      { key: "cuisineMilieu", label: "Cuisine milieu de gamme", group: "cuisineNiveau" },
-      { key: "cuisineHaut", label: "Cuisine haut de gamme", group: "cuisineNiveau" },
+      { key: "porteplacard", label: "Portes de placard", pieces: ["chambre", "entree", "bureau"] },
+      { key: "dressing", label: "Dressing sur mesure", pieces: ["chambre"] },
+      { key: "cuisineEntree", label: "Cuisine entrée de gamme", group: "cuisineNiveau", pieces: ["cuisine"] },
+      { key: "cuisineMilieu", label: "Cuisine milieu de gamme", group: "cuisineNiveau", pieces: ["cuisine"] },
+      { key: "cuisineHaut", label: "Cuisine haut de gamme", group: "cuisineNiveau", pieces: ["cuisine"] },
     ],
   },
 ];
@@ -433,7 +433,8 @@ export default function EstimateurBDS() {
     qtyInput: { width: 80, padding: "8px 10px", borderRadius: 6, border: "1.5px solid #DDD", fontSize: 13, fontFamily: "inherit" },
     catHeader: (open) => ({ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: open ? MARINE : "#F0F0F5", color: open ? BLANC : MARINE, borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: 14, marginTop: 12 }),
     catBody: { padding: "12px 4px 4px 4px" },
-    nota: { fontSize: 11.5, color: "#888", fontStyle: "italic", marginTop: 8, marginBottom: 4, lineHeight: 1.5 },
+    nota: { fontSize: 12.5, color: "#5A5A2E", background: "#FBF6E7", border: "1px solid #E8DBA8", borderRadius: 8, padding: "10px 12px", marginTop: 8, marginBottom: 10, lineHeight: 1.6 },
+    notaInfo: { fontSize: 13, color: MARINE, background: "#EEF0F7", border: `1px solid ${MARINE}22`, borderRadius: 8, padding: "14px 16px", marginTop: 10, lineHeight: 1.6, textAlign: "center" },
     badge: { display: "inline-block", background: "#F0F0F5", color: MARINE, fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, marginBottom: 12 },
     footer: { color: "#999", fontSize: 11, textAlign: "center", marginTop: 24, lineHeight: 1.6 },
     hubCard: (color) => ({ border: `2px solid ${color}`, borderRadius: 12, padding: "20px", marginTop: 14, cursor: "pointer", textAlign: "center" }),
@@ -584,7 +585,12 @@ export default function EstimateurBDS() {
             {erreurs.surface && <div style={s.err}>{erreurs.surface}</div>}
 
             <label style={s.label}>Travaux envisagés</label>
-            {CAT_INTERIEUR.map((cat) => {
+            {!pieceCourante.type && (
+              <div style={s.notaInfo}>👆 Choisissez d'abord le type de pièce ci-dessus pour voir les travaux disponibles.</div>
+            )}
+            {pieceCourante.type && CAT_INTERIEUR.map((cat) => {
+              const itemsVisibles = cat.items.filter((item) => !item.pieces || item.pieces.includes(pieceCourante.type));
+              if (itemsVisibles.length === 0) return null;
               const open = catOuverte === cat.id;
               return (
                 <div key={cat.id}>
@@ -594,8 +600,8 @@ export default function EstimateurBDS() {
                   </div>
                   {open && (
                     <div style={s.catBody}>
-                      {cat.nota && <div style={s.nota}>{cat.nota}</div>}
-                      {cat.items.map((item) => {
+                      {cat.nota && <div style={s.nota}>ℹ️ {cat.nota}</div>}
+                      {itemsVisibles.map((item) => {
                         const active = pieceCourante.ops[item.key] !== undefined;
                         if (item.auto) {
                           return (
