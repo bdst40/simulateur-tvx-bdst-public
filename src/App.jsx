@@ -21,6 +21,7 @@ const EMAILJS_SERVICE_ID = "service_t51wus8";
 const EMAILJS_TEMPLATE_ADMIN = "template_slix1ni";
 const EMAILJS_TEMPLATE_PROSPECT = "template_6zrwttl";
 const EMAILJS_PUBLIC_KEY = "H456JnEh4IFv_91wc";
+const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/y9djnjtwebn00q4brjqojnxueelfwvwu";
 
 // ─── BASE DE PRIX ──────────────────────────────────────────────────────────
 // "moy" = prix moyen constaté (issu de la base interne BDS pour les postes
@@ -436,6 +437,19 @@ export default function EstimateurBDS() {
         ...templateParams,
         to_email: "contact@bd-solutions-travaux.fr",
       });
+
+      // Envoi vers Make (création automatique dans Notion CRM). Volontairement
+      // non-bloquant : un échec ici ne doit jamais empêcher la confirmation
+      // affichée au prospect, qui a déjà reçu son mail à ce stade.
+      try {
+        await fetch(MAKE_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(templateParams),
+        });
+      } catch (webhookErr) {
+        console.error("Erreur envoi webhook Make (non bloquant):", webhookErr);
+      }
 
       setEnvoiStatut("ok");
       setEtape("fin");
