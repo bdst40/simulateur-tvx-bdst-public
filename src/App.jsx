@@ -380,6 +380,27 @@ export default function EstimateurBDS() {
 
       const recapTexte = [lignesPieces, ligneGlobal].filter(Boolean).join("\n\n");
 
+      // Version HTML stylée (mail prospect uniquement)
+      const blocPieceHtml = (titre, detail) => `
+        <div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #EEEEEE;">
+          <div style="font-weight:700;color:#000131;font-size:15px;margin-bottom:8px;">${titre}</div>
+          ${detail
+            .map(
+              (d) =>
+                `<div style="font-size:13px;color:#555555;padding:3px 0;">• ${d.label} (${d.qte} ${d.unite})${d.wide ? " ⚠️ sur devis" : ""} : ${Math.round(d.bas)}-${Math.round(d.haut)} €</div>`
+            )
+            .join("")}
+        </div>`;
+
+      const recapHtml =
+        pieces
+          .map((p, i) => {
+            const c = calculPiece(p);
+            const label = TYPES_PIECE.find((t) => t.id === p.type)?.label || p.type;
+            return blocPieceHtml(`${label} — ${p.surface} m²`, c.detail);
+          })
+          .join("") + (g.detail.length ? blocPieceHtml("🌳 Extérieur / global", g.detail) : "");
+
       const templateParams = {
         prenom: contact.prenom,
         nom: contact.nom,
@@ -389,6 +410,7 @@ export default function EstimateurBDS() {
         statut: contact.statut,
         nb_pieces: pieces.length,
         recap_detail: recapTexte,
+        recap_html: recapHtml,
         budget_bas: Math.round(totalGeneral.bas),
         budget_haut: Math.round(totalGeneral.haut),
         date: new Date().toLocaleDateString("fr-FR"),
@@ -447,7 +469,7 @@ export default function EstimateurBDS() {
     nota: { fontSize: 12.5, color: "#5A5A2E", background: "#FBF6E7", border: "1px solid #E8DBA8", borderRadius: 8, padding: "10px 12px", marginTop: 8, marginBottom: 10, lineHeight: 1.6 },
     notaInfo: { fontSize: 13, color: MARINE, background: "#EEF0F7", border: `1px solid ${MARINE}22`, borderRadius: 8, padding: "14px 16px", marginTop: 10, lineHeight: 1.6, textAlign: "center" },
     badge: { display: "inline-block", background: "#F0F0F5", color: MARINE, fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, marginBottom: 12 },
-    footer: { color: "rgba(255,255,255,0.9)", fontSize: 11, textAlign: "center", marginTop: 24, lineHeight: 1.6, padding: "0 20px", textShadow: "0 1px 4px rgba(0,0,0,0.6)" },
+    footer: { width: "100%", background: "rgba(0,1,49,0.55)", backdropFilter: "blur(6px)", color: "rgba(255,255,255,0.9)", fontSize: 11, textAlign: "center", marginTop: 32, lineHeight: 1.6, padding: "16px 20px", boxSizing: "border-box" },
     hubCard: (color) => ({ border: `2px solid ${color}`, borderRadius: 12, padding: "20px", marginTop: 14, cursor: "pointer", textAlign: "center" }),
     contactLink: { fontSize: 12.5, color: "#666", textAlign: "center", marginTop: 20, padding: "12px", background: "#F7F7F9", borderRadius: 8, lineHeight: 1.6 },
   };
