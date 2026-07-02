@@ -447,7 +447,7 @@ export default function EstimateurBDS() {
     nota: { fontSize: 12.5, color: "#5A5A2E", background: "#FBF6E7", border: "1px solid #E8DBA8", borderRadius: 8, padding: "10px 12px", marginTop: 8, marginBottom: 10, lineHeight: 1.6 },
     notaInfo: { fontSize: 13, color: MARINE, background: "#EEF0F7", border: `1px solid ${MARINE}22`, borderRadius: 8, padding: "14px 16px", marginTop: 10, lineHeight: 1.6, textAlign: "center" },
     badge: { display: "inline-block", background: "#F0F0F5", color: MARINE, fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, marginBottom: 12 },
-    footer: { color: "rgba(255,255,255,0.75)", fontSize: 11, textAlign: "center", marginTop: 24, lineHeight: 1.6, padding: "0 20px" },
+    footer: { color: "rgba(255,255,255,0.9)", fontSize: 11, textAlign: "center", marginTop: 24, lineHeight: 1.6, padding: "0 20px", textShadow: "0 1px 4px rgba(0,0,0,0.6)" },
     hubCard: (color) => ({ border: `2px solid ${color}`, borderRadius: 12, padding: "20px", marginTop: 14, cursor: "pointer", textAlign: "center" }),
     contactLink: { fontSize: 12.5, color: "#666", textAlign: "center", marginTop: 20, padding: "12px", background: "#F7F7F9", borderRadius: 8, lineHeight: 1.6 },
   };
@@ -467,7 +467,7 @@ export default function EstimateurBDS() {
   }
   const pageStyle = {
     ...s.page,
-    backgroundImage: `linear-gradient(rgba(0,1,49,0.55), rgba(0,1,49,0.72)), url(${fondActuel()})`,
+    backgroundImage: `url(${fondActuel()})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundAttachment: "fixed",
