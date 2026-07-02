@@ -247,7 +247,7 @@ const CAT_GLOBAL = [
 export default function EstimateurBDS() {
   const [etape, setEtape] = useState("intro");
   const [contact, setContact] = useState({
-    prenom: "", nom: "", email: "", telephone: "", delai: "", statut: "", optin: false,
+    prenom: "", nom: "", email: "", telephone: "", localite: "", delai: "", statut: "", optin: false,
   });
   const [erreurs, setErreurs] = useState({});
 
@@ -335,6 +335,7 @@ export default function EstimateurBDS() {
     if (!contact.nom.trim()) err.nom = "Nom requis";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email)) err.email = "Email invalide";
     if (!contact.telephone.trim()) err.telephone = "Téléphone requis";
+    if (!contact.localite.trim()) err.localite = "Localité requise";
     if (!contact.delai) err.delai = "Sélectionnez un délai";
     if (!contact.statut) err.statut = "Sélectionnez un statut";
     if (!contact.optin) err.optin = "Consentement requis pour continuer";
@@ -407,6 +408,7 @@ export default function EstimateurBDS() {
         nom: contact.nom,
         email: contact.email,
         telephone: contact.telephone,
+        localite: contact.localite,
         delai: contact.delai,
         statut: contact.statut,
         nb_pieces: pieces.length,
@@ -563,6 +565,16 @@ export default function EstimateurBDS() {
             <label style={s.label}>Téléphone *</label>
             <input type="tel" style={{ ...s.input, ...(erreurs.telephone ? s.inputErr : {}) }} value={contact.telephone} onChange={(e) => setContact({ ...contact, telephone: e.target.value })} />
             {erreurs.telephone && <div style={s.err}>{erreurs.telephone}</div>}
+
+            <label style={s.label}>Localité des travaux *</label>
+            <input
+              type="text"
+              style={{ ...s.input, ...(erreurs.localite ? s.inputErr : {}) }}
+              value={contact.localite}
+              onChange={(e) => setContact({ ...contact, localite: e.target.value })}
+              placeholder="Ex : Mont-de-Marsan"
+            />
+            {erreurs.localite && <div style={s.err}>{erreurs.localite}</div>}
 
             <label style={s.label}>Délai envisagé pour le projet *</label>
             <select style={{ ...s.select, ...(erreurs.delai ? s.inputErr : {}) }} value={contact.delai} onChange={(e) => setContact({ ...contact, delai: e.target.value })}>
