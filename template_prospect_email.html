@@ -1,0 +1,50 @@
+<!-- À coller dans EmailJS > template_6zrwttl > éditeur HTML/Code -->
+<div style="background-color:#F7F7F9;padding:24px 0;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:10px;overflow:hidden;">
+    <tr>
+      <td style="background-color:#000131;padding:24px 28px;text-align:left;">
+        <img src="https://simulateur-tvx-bdst.vercel.app/logo-bdst.jpg" alt="BD Solutions Travaux" height="48" style="display:block;margin-bottom:8px;" />
+        <span style="color:#D4AF37;font-size:13px;font-weight:bold;">Votre estimation de travaux</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:28px;">
+        <p style="font-size:15px;color:#000131;margin:0 0 16px 0;">Bonjour {{prenom}},</p>
+        <p style="font-size:14px;color:#444444;line-height:1.6;margin:0 0 24px 0;">
+          Merci d'avoir utilisé notre simulateur. Voici le récapitulatif de votre demande du {{date}} :
+        </p>
+
+        {{recap_html}}
+
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#000131;border-radius:8px;margin-top:8px;">
+          <tr>
+            <td style="padding:18px 20px;text-align:center;">
+              <div style="color:#D4AF37;font-size:12px;font-weight:bold;letter-spacing:0.5px;">BUDGET TOTAL ESTIMÉ</div>
+              <div style="color:#FFFFFF;font-size:24px;font-weight:bold;margin-top:6px;">{{budget_bas}} € – {{budget_haut}} €</div>
+            </td>
+          </tr>
+        </table>
+
+        <p style="font-size:11.5px;color:#888888;line-height:1.6;margin-top:20px;border:1px solid #DDDDDD;border-radius:8px;padding:12px 14px;">
+          Estimation indicative non contractuelle, basée sur une grille tarifaire locale (zone Mont-de-Marsan et 80 km
+          alentours). Le prix réel peut varier selon la localisation exacte, l'état du support et l'accessibilité du
+          chantier. Les postes marqués ⚠️ nécessitent une étude sur site pour un chiffrage précis. Seul un devis
+          d'artisan fait foi.
+        </p>
+
+        <p style="font-size:14px;color:#444444;line-height:1.6;margin-top:24px;">
+          Notre équipe revient vers vous prochainement pour affiner votre projet et vous proposer un rendez-vous.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color:#F0F0F5;padding:20px 28px;text-align:center;">
+        <div style="color:#000131;font-size:13px;font-weight:bold;">BD Solutions Travaux</div>
+        <div style="color:#666666;font-size:12px;margin-top:4px;">
+          06 85 27 10 42 · contact@bd-solutions-travaux.fr<br />
+          63 rue Jean-Pierre Labarbe, 40000 Mont-de-Marsan
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
