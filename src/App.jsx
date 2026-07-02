@@ -414,6 +414,7 @@ export default function EstimateurBDS() {
         budget_bas: Math.round(totalGeneral.bas),
         budget_haut: Math.round(totalGeneral.haut),
         date: new Date().toLocaleDateString("fr-FR"),
+        to_email: contact.email,
       };
 
       if (!window.emailjs) {
@@ -429,6 +430,12 @@ export default function EstimateurBDS() {
 
       await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ADMIN, templateParams);
       await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PROSPECT, templateParams);
+      // Copie du mail prospect envoyée à BDST pour contrôle qualité (nécessite
+      // que le champ "To Email" du template_6zrwttl utilise {{to_email}})
+      await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PROSPECT, {
+        ...templateParams,
+        to_email: "contact@bd-solutions-travaux.fr",
+      });
 
       setEnvoiStatut("ok");
       setEtape("fin");
