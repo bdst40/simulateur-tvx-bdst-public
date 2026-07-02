@@ -2,6 +2,17 @@ import { useState, useMemo } from "react";
 
 const LOGO_SRC = "/logo-bdst.jpg";
 
+const BG_IMAGES = {
+  chambre: "/img/chambre.jpg",
+  salon: "/img/salon.jpg",
+  cuisine: "/img/cuisine.jpg",
+  sdb: "/img/sdb.jpg",
+  bureau: "/img/bureau.jpg",
+  entree: "/img/entree.jpg",
+  wc: "/img/wc.jpg",
+  jardin: "/img/jardin.jpg",
+};
+
 const MARINE = "#000131";
 const OR = "#D4AF37";
 const BLANC = "#FFFFFF";
@@ -410,11 +421,11 @@ export default function EstimateurBDS() {
 
   const s = {
     page: { minHeight: "100vh", background: "#F7F7F9", fontFamily: "'Montserrat','Helvetica Neue',Arial,sans-serif", display: "flex", flexDirection: "column", alignItems: "center", padding: "0 0 40px 0" },
-    header: { width: "100%", background: MARINE, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, boxSizing: "border-box" },
+    header: { width: "100%", background: "rgba(0,1,49,0.55)", backdropFilter: "blur(6px)", padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, boxSizing: "border-box" },
     logo: { height: 52 },
     headerTitle: { color: BLANC, fontSize: 18, fontWeight: 600, margin: 0 },
     headerSub: { color: OR, fontSize: 12, margin: 0, fontWeight: 500 },
-    card: { background: BLANC, borderRadius: 12, padding: 32, maxWidth: 600, width: "100%", boxShadow: "0 2px 16px rgba(0,1,49,0.08)", marginTop: 32, boxSizing: "border-box" },
+    card: { background: "rgba(255,255,255,0.96)", backdropFilter: "blur(10px)", borderRadius: 20, padding: 32, maxWidth: 600, width: "100%", boxShadow: "0 8px 32px rgba(0,1,49,0.25)", marginTop: 32, boxSizing: "border-box" },
     h2: { color: MARINE, fontSize: 22, fontWeight: 700, marginTop: 0, marginBottom: 8 },
     p: { color: "#444", fontSize: 14, lineHeight: 1.6, marginTop: 0, marginBottom: 20 },
     label: { display: "block", color: MARINE, fontSize: 13, fontWeight: 600, marginBottom: 6, marginTop: 16 },
@@ -436,15 +447,34 @@ export default function EstimateurBDS() {
     nota: { fontSize: 12.5, color: "#5A5A2E", background: "#FBF6E7", border: "1px solid #E8DBA8", borderRadius: 8, padding: "10px 12px", marginTop: 8, marginBottom: 10, lineHeight: 1.6 },
     notaInfo: { fontSize: 13, color: MARINE, background: "#EEF0F7", border: `1px solid ${MARINE}22`, borderRadius: 8, padding: "14px 16px", marginTop: 10, lineHeight: 1.6, textAlign: "center" },
     badge: { display: "inline-block", background: "#F0F0F5", color: MARINE, fontSize: 11, fontWeight: 700, padding: "4px 10px", borderRadius: 20, marginBottom: 12 },
-    footer: { color: "#999", fontSize: 11, textAlign: "center", marginTop: 24, lineHeight: 1.6 },
+    footer: { color: "rgba(255,255,255,0.75)", fontSize: 11, textAlign: "center", marginTop: 24, lineHeight: 1.6, padding: "0 20px" },
     hubCard: (color) => ({ border: `2px solid ${color}`, borderRadius: 12, padding: "20px", marginTop: 14, cursor: "pointer", textAlign: "center" }),
     contactLink: { fontSize: 12.5, color: "#666", textAlign: "center", marginTop: 20, padding: "12px", background: "#F7F7F9", borderRadius: 8, lineHeight: 1.6 },
   };
 
   const surfaceNum = pieceCourante ? parseFloat(pieceCourante.surface) || 0 : 0;
 
+  // Fond photo contextuel selon l'étape
+  function fondActuel() {
+    if (etape === "intro") return BG_IMAGES.jardin;
+    if (etape === "contact") return BG_IMAGES.entree;
+    if (etape === "hub") return BG_IMAGES.salon;
+    if (etape === "piece") return pieceCourante?.type ? BG_IMAGES[pieceCourante.type] : BG_IMAGES.salon;
+    if (etape === "global") return BG_IMAGES.jardin;
+    if (etape === "resultat") return pieces.length > 0 ? BG_IMAGES[pieces[pieces.length - 1].type] : BG_IMAGES.jardin;
+    if (etape === "fin") return BG_IMAGES.jardin;
+    return BG_IMAGES.salon;
+  }
+  const pageStyle = {
+    ...s.page,
+    backgroundImage: `linear-gradient(rgba(0,1,49,0.55), rgba(0,1,49,0.72)), url(${fondActuel()})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
+  };
+
   return (
-    <div style={s.page}>
+    <div style={pageStyle}>
       <div style={s.header}>
         <img src={LOGO_SRC} alt="BD Solutions Travaux" style={s.logo} />
         <div>
