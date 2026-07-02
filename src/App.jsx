@@ -748,12 +748,14 @@ export default function EstimateurBDS() {
               </div>
             </div>
 
-            <p style={{ ...s.p, fontSize: 11.5, color: "#888", marginTop: 16, marginBottom: 0 }}>
-              Estimation indicative non contractuelle, basée sur une grille tarifaire locale (zone Mont-de-Marsan et
-              80 km alentours). Le prix réel peut varier selon la localisation exacte, l'état du support et
-              l'accessibilité du chantier. Les postes marqués ⚠️ nécessitent une étude sur site pour un chiffrage
-              précis. Seul un devis d'artisan fait foi.
-            </p>
+            <div style={{ border: "1px solid #DDD", borderRadius: 8, padding: "12px 14px", marginTop: 16 }}>
+              <p style={{ ...s.p, fontSize: 11.5, color: "#888", marginTop: 0, marginBottom: 0 }}>
+                Estimation indicative non contractuelle, basée sur une grille tarifaire locale (zone Mont-de-Marsan et
+                80 km alentours). Le prix réel peut varier selon la localisation exacte, l'état du support et
+                l'accessibilité du chantier. Les postes marqués ⚠️ nécessitent une étude sur site pour un chiffrage
+                précis. Seul un devis d'artisan fait foi.
+              </p>
+            </div>
 
             <button style={s.btnGold} onClick={() => setEtape("hub")}>+ Ajouter pièce ou opération</button>
             <button style={s.btnPrimary} onClick={envoyerRecap} disabled={envoiEnCours}>
