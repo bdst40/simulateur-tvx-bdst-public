@@ -372,6 +372,9 @@ export default function EstimateurBDS() {
         .join("\n\n");
 
       const g = calculGlobal();
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      const reference = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}-${Math.floor(100 + Math.random() * 900)}`;
       const ligneGlobal = g.detail.length
         ? "Opérations extérieures / globales :\n" +
           g.detail
@@ -418,6 +421,7 @@ export default function EstimateurBDS() {
         budget_haut: Math.round(totalGeneral.haut),
         date: new Date().toLocaleDateString("fr-FR"),
         to_email: contact.email,
+        reference: reference,
       };
 
       if (!window.emailjs) {

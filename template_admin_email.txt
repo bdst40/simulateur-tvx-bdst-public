@@ -1,0 +1,18 @@
+Objet : Nouvelle demande d'estimation — {{prenom}} {{nom}}
+
+Nouvelle demande reçue via le simulateur en ligne le {{date}}.
+
+CONTACT
+Nom : {{prenom}} {{nom}}
+Email : {{email}}
+Téléphone : {{telephone}}
+Localité des travaux : {{localite}}
+Délai envisagé : {{delai}}
+Statut : {{statut}}
+
+PROJET
+Nombre de pièces : {{nb_pieces}}
+
+{{recap_detail}}
+
+BUDGET TOTAL ESTIMÉ : {{budget_bas}} € - {{budget_haut}} €
