@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const LOGO_SRC = "/logo-bdst.jpg";
 
@@ -94,6 +94,12 @@ const PRICES = {
   assainissement: { label: "Assainissement individuel (fosse)", unite: "forfait", moy: 7000, source: "interne", wide: true },
   terrassement: { label: "Terrassement", unite: "m³", moy: 30, source: "interne", wide: true },
 };
+
+function trackEvent(name, params = {}) {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", name, params);
+  }
+}
 
 function calcPoste(key, qte) {
   const p = PRICES[key];
@@ -260,6 +266,10 @@ export default function EstimateurBDS() {
 
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
   const [envoiStatut, setEnvoiStatut] = useState(null);
+
+  useEffect(() => {
+    trackEvent("etape_vue", { etape });
+  }, [etape]);
 
   function nouvellePiece() {
     setPieceCourante({ type: null, surface: "", ops: {} });
@@ -458,11 +468,13 @@ export default function EstimateurBDS() {
       }
 
       setEnvoiStatut("ok");
+      trackEvent("estimation_envoyee", { budget_bas: templateParams.budget_bas, budget_haut: templateParams.budget_haut });
       setEtape("fin");
     } catch (e) {
       console.error("Erreur envoi EmailJS:", e);
       const detail = e?.text || e?.message || (typeof e === "string" ? e : JSON.stringify(e));
       setEnvoiStatut(detail || "Erreur inconnue");
+      trackEvent("estimation_erreur_envoi");
     } finally {
       setEnvoiEnCours(false);
     }
